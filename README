@@ -1,0 +1,76 @@
+This is the MySQL-ZRM Xtrabackup Plugin version 0.1
+===================================================
+
+Author: Kristian Kostecky
+Date: Mar 7, 2011
+Contact: kris at vmfarms dot com
+
+Copyright (c) 2011
+VM Farms Inc.
+All rights reserved.
+
+
+License Information
+-------------------
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+The license is contained in the file 'COPYING'.
+
+Installing
+----------
+Add the following line to your mysql-zrm.conf file:
+
+ihb-plugin=/usr/share/mysql-zrm/plugins/xtradb-backup.pl
+
+Then proceed to adjust the features explained in the Configuring section.
+
+Configuring
+-----------
+All options are defined in the mysql-zrm.conf file in your /etc directory.
+All options are specified with their default value.
+
+
+xdb-save-mycnf=1 {0,1}: This option saves a copy of all
+	mysql variables that are currently set in a my.cnf format. This
+	is so that if a restore is needed after a change has been made
+	the appropriate options are backed up.
+
+xdb-double-prepare=0 {0,1}: This option tells percona's xtrabackup
+	to not only back the data up and run one prepare to make the
+	database useable, but to run prepare a second time. This
+	regenerates the innodb logs so you can plop the backup in to
+	production right away on restore. Remember, doing this will take
+	a significant amount of space depending on how big your log files
+	are.
+
+xdb-copy-frm=1 {0,1}: This option copies all the support files that are
+	necessary to use the innodb backups properly. It includes all the
+	.frm files and .opt files. This option should basically always be
+	on for consistent backups.
+
+xdb-throttle=<none> {int}: This option is simply passed on to xtrabackup.
+	It allows you throttle the xtrabackup procedure by specifying
+	the number of pairs of read-and-write operations per second that
+	xtrabackup will perform.
+	
+xdb-use-memory=<none> {int}: This option is simply passed on to xtrabackup.
+	This option affects how much memory is allocated for preparing a 
+	backup with --prepare, or analyzing statistics with --stats. The
+	xtrabackup default is 100MB.
+
+xdb-parallel=<none> {int}: This option is simply passed on to xtrabackup.
+	This option specifies the number of threads to use to copy multiple 
+	data files concurrently when creating a backup. The xtrabackup default
+	is 1 (no concurrent transfer).
