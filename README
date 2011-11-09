@@ -28,19 +28,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 The license is contained in the file 'COPYING'.
 
+Synopsis
+--------
+This plugin can be used with mysql-zrm when running mysql-zrm on the same
+server that the mysql DB is running on.
+
 Installing
 ----------
-Add the following line to your mysql-zrm.conf file:
 
-ihb-plugin=/usr/share/mysql-zrm/plugins/xtradb-backup.pl
+1) Copy xtradb-backup.pl to your mysql-zrm plugins directory. This should
+   be /usr/share/mysql-zrm/plugins on standard RedHat and derivative 
+   distributions.
 
-Then proceed to adjust the features explained in the Configuring section.
+2) Add the following line to your mysql-zrm.conf file:
+
+   ihb-plugin=/usr/share/mysql-zrm/plugins/xtradb-backup.pl
+
+   This should reflect the path to the xtradb-backup.pl file you pulled from
+   our github repository.
+
+3) Make sure the backup-mode is not set to logical in your mysql-zrm.conf. The
+   default is raw.
+
+4) The default settings written in to the plugin will get you going. If you want 
+   to modify the behaviour of the xtrabackup plugin, then proceed to adjust the 
+   features explained in the Configuring section.
 
 Configuring
 -----------
-All options are defined in the mysql-zrm.conf file in your /etc directory.
-All options are specified with their default value.
-
+All options below are specified with the default value the plugin runs with
+and {possible values} in curly braces. You do not need to define any of these
+in the mysql-zrm.conf unless you want to change the default values.
 
 xdb-save-mycnf=1 {0,1}: This option saves a copy of all
 	mysql variables that are currently set in a my.cnf format. This
@@ -74,3 +92,17 @@ xdb-parallel=<none> {int}: This option is simply passed on to xtrabackup.
 	This option specifies the number of threads to use to copy multiple 
 	data files concurrently when creating a backup. The xtrabackup default
 	is 1 (no concurrent transfer).
+
+KNOWN ISSUES
+------------
+* If you have a database that contains a mix of tables with different 
+  database engines, mysql-zrm will not beahve properly when using this plugin. You
+  risk missing tables in your backups. This is not an issue if your database tables
+  were created consistenly. This does not affect you if you have a strict MYISAM database
+  and a databse that is strict INNODB. This plugin and mysql-zrm will perform as expected.
+
+* You will have to restore your backup manually using xtrabackup.
+
+TODO
+----
+- Add restore functionality for turnkey hotbackup support.
