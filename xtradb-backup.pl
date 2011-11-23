@@ -164,9 +164,10 @@ sub copySupport() {
         my $innoDbDir = catfile( $ihbDataDir, $innoDb );
         &printLog("Path: $innoDbDir\n");
         my $dbBackupDir = catfile( $destDir, $innoDb );
+        mkdir($dbBackupDir) || die ("could not create backup dir $dbBackupDir\n");
         my @frmFiles = glob( $innoDbDir . "/*.{frm,opt}" );
         for my $frmFile (@frmFiles) {
-            &printLog("Backing-up file: $frmFile\n");
+            &printLog("Backing-up file: $frmFile to $dbBackupDir\n");
             copy( $frmFile, $dbBackupDir )
               or die(
 "xtrabackup plugin could not copy $frmFile to backup directory\n"
