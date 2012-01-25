@@ -164,7 +164,7 @@ sub copySupport() {
         my $innoDbDir = catfile( $ihbDataDir, $innoDb );
         &printLog("Path: $innoDbDir\n");
         my $dbBackupDir = catfile( $destDir, $innoDb );
-        mkdir($dbBackupDir) || die ("could not create backup dir $dbBackupDir\n");
+        unless(-d $dbBackupDir) { mkdir($dbBackupDir) || die ("could not create backup dir $dbBackupDir\n"); }
         my @frmFiles = glob( $innoDbDir . "/*.{frm,opt}" );
         for my $frmFile (@frmFiles) {
             &printLog("Backing-up file: $frmFile to $dbBackupDir\n");
